@@ -12,15 +12,20 @@
  * - Upload de código desde IDE Arduino
  * - Abre terminal, el output irá indicando el estado del test
  *
+ * Al final del test el LED quedará encendido, fijo, si el simcom es OK.
+ * Parpadeará en intervalos de 100milis si Hay FALLO.
+ * Esto permite validar modulos sin necesidad de consola serial.
+ *
  * Version 0.0.1
  * Author Jordi Enguídanos
  * @repository https://github.com/Rhomb-io/SimcomTester
  */
 
-int GSM_PWREN = 8;
-int GSM_PWRKEY = 9;
-int GPS_EN = 10;
-int GSM_STATUS = 11;
+int const GSM_PWREN = 8;
+int const GSM_PWRKEY = 9;
+int const GPS_EN = 10;
+int const GSM_STATUS = 11;
+int const LED = 13;
 
 char buffer[150];
 
@@ -94,6 +99,7 @@ void setup()
   pinMode(GSM_PWREN, OUTPUT);
   pinMode(GSM_PWRKEY, OUTPUT);
   pinMode(GSM_STATUS, INPUT);
+  pinMode(LED, OUTPUT);
   digitalWrite(GSM_PWREN, HIGH);
   digitalWrite(GSM_PWRKEY, LOW);
   digitalWrite(GPS_EN, LOW);
@@ -127,7 +133,12 @@ void setup()
 
 void loop (void)
 {
-  // nada por aquí...
+  if (testsOk == 3) {
+    digitalWrite(LED, true);
+  } else {
+    digitalWrite(LED, !digitalRead(LED));
+    delay(200);
+  }
 }
 
 void getIMEI (void)
