@@ -14,7 +14,7 @@
  *
  * Version 0.0.1
  * Author Jordi Enguídanos
- * @repository https://github.com/M2MSystemSource/SimcomTester
+ * @repository https://github.com/Rhomb-io/SimcomTester
  */
 
 int GSM_PWREN = 8;
