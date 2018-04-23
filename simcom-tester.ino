@@ -40,17 +40,17 @@ void debug (char * message) {
 }
 
 void simcomPowerKey (void) {
-  Serial.println("");
-  Serial.println("--------------------------------");
-  Serial.println("Iniciando TEST 1/3 (MODEM POWERON)");
+  debug(F(""));
+  debug(F("--------------------------------"));
+  debug(F("Iniciando TEST 1/3 (MODEM POWERON)"));
 
   for (char i=0;i<5;i++) {
     Serial.print("...");
     if (digitalRead(GSM_STATUS) == HIGH) {
-      Serial.println("HIGH");
+      debug(F("HIGH"));
       break;
     } else {
-      Serial.println("LOW");
+      debug(F("LOW"));
       digitalWrite(GSM_PWRKEY, HIGH);
       delay(1500);                       // pulse for Power_ON
       digitalWrite(GSM_PWRKEY, LOW);
@@ -59,10 +59,10 @@ void simcomPowerKey (void) {
   }
 
   if (digitalRead(GSM_STATUS) == HIGH) {
-    debug("TEST 1/3 OK");
+    debug(F("TEST 1/3 OK"));
     testsOk++;
   } else {
-    debug("TEST 1/3 FAIL");
+    debug(F("TEST 1/3 FAIL"));
   }
 }
 
@@ -104,7 +104,7 @@ void setup()
   digitalWrite(GSM_PWRKEY, LOW);
   digitalWrite(GPS_EN, LOW);
 
-  // init serial. en "utils.c" se define "debug" como alias de Serial.printnl
+  // i(nit serial. en "utils.c" se define "debug"F como alias de Serial.print)nl
   Serial.begin(115200);
   Serial1.begin(115200);
   delay(1000);
@@ -119,23 +119,22 @@ void setup()
   getICCID();
 
   if (testsOk == 3) {
-    debug("");
-    debug("-------------------------------------------------");
-    debug("         ÉXITO - TODOS LOS TEST PASADOS");
-    debug("-------------------------------------------------");
+    digitalWrite(LED, true);
+    debug(F(""));
+    debug(F("-------------------------------------------------"));
+    debug(F("         ÉXITO - TODOS LOS TEST PASADOS"));
+    debug(F("-------------------------------------------------"));
   } else {
-    debug("");
-    debug("-------------------------------------------------");
-    debug("           ERROR - ALGO HA IDO MAL...");
-    debug("-------------------------------------------------");
+    debug(F(""));
+    debug(F("-------------------------------------------------"));
+    debug(F("           ERROR - ALGO HA IDO MAL..."));
+    debug(F("-------------------------------------------------"));
   }
 }
 
 void loop (void)
 {
-  if (testsOk == 3) {
-    digitalWrite(LED, true);
-  } else {
+  if (testsOk != 3) {
     digitalWrite(LED, !digitalRead(LED));
     delay(200);
   }
@@ -143,9 +142,9 @@ void loop (void)
 
 void getIMEI (void)
 {
-  debug("");
-  debug("--------------------------------");
-  debug("Iniciando TEST 2/3 (CHECK IMEI)");
+  debug(F(""));
+  debug(F("--------------------------------"));
+  debug(F("Iniciando TEST 2/3 (CHECK IMEI)"));
 
   sendAt("AT+CGSN", 1500);
 
@@ -156,22 +155,22 @@ void getIMEI (void)
   strncpy(imei, imei, 15);
 
   Serial.print("IMEI:");
-  Serial.println(imei);
+  debug(imei);
 
   if (strlen(imei) == 16) {
-    debug("TEST 2/3 OK");
+    debug(F("TEST 2/3 OK"));
     testsOk++;
   } else {
-    debug("TEST 2/3 FAIL");
+    debug(F("TEST 2/3 FAIL"));
   }
 }
 
 
 void getICCID (void)
 {
-  debug("");
-  debug("--------------------------------");
-  debug("Iniciando TEST 3/3 (CHECK ICCID)");
+  debug(F(""));
+  debug(F("--------------------------------"));
+  debug(F("Iniciando TEST 3/3 (CHECK ICCID)"));
 
   sendAt("AT+ICCID", 1500);
 
@@ -186,9 +185,9 @@ void getICCID (void)
   Serial.println(strlen(iccid));
 
   if (strlen(iccid) == 21) {
-    debug("TEST 3/3 OK");
+    debug(F("TEST 3/3 OK"));
     testsOk++;
   } else {
-    debug("TEST 3/3 FAIL");
+    debug(F("TEST 3/3 FAIL"));
   }
 }
